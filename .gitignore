@@ -1,0 +1,28 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# ML models
+*.pth
+*.pt
+*.onnx
+models/
+
+# Environment variables
+.env
+.env.local
+
+# Node
+node_modules/
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Vite
+frontend/dist/
+
+# Logs
+*.log
