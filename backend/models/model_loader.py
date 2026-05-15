@@ -115,9 +115,9 @@ WEIGHTS_DIR = Path("weights")
 
 # REPLACE THESE WITH YOUR RAW HUGGING FACE LINKS
 WEIGHTS_MAP = {
-    "resnet18_best.pth": "https://huggingface.co/prasharindustries/krishilynk-weights/resolve/main/resnet18_best.pth",
-    "efficientnet_best.pth": "https://huggingface.co/prasharindustries/krishilynk-weights/resolve/main/efficientnet_best.pth",
-    "densenet121_best.pth": "https://huggingface.co/prasharindustries/krishilynk-weights/resolve/main/densenet121_best.pth"
+    "resnet18_best.pth": "https://huggingface.co/prasharindustries/krishilynk-weights/resolve/main/resnet18_best.pth.zip",
+    "efficientnet_best.pth": "https://huggingface.co/prasharindustries/krishilynk-weights/resolve/main/efficientnet_best.pth.zip",
+    "densenet121_best.pth": "https://huggingface.co/prasharindustries/krishilynk-weights/resolve/main/densenet121_best.pth.zip"
 }
 
 class ModelRegistry:
