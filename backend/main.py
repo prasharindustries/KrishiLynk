@@ -154,7 +154,6 @@ async def lifespan(app: FastAPI):
     yield
     logger.info("🛑 Shutting down …")
 
-
 # ── App factory ───────────────────────────────────────────────────────────────
 app = FastAPI(
     title="Crop Disease XAI API",
@@ -167,27 +166,35 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-
-# Update with your actual Vercel deployment URL
-# backend/main.py
-
+# 1. Update CORS to allow the specific HTTPS origin (REPLACES YOUR OLD CORS BLOCK)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
         "http://localhost:5173",
-        "https://krishilynk-frontend.vercel.app" # <--- ADD YOUR VERCEL URL HERE
+        "https://krishilynk-frontend.vercel.app" # Ensure no trailing slash
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# 2. Fix the 405 error - Support both GET and HEAD for Render's health checks
+@app.api_route("/", methods=["GET", "HEAD"])
+async def health_check():
+    return {
+        "status": "ok",
+        "service": "Crop Disease XAI API",
+        "version": "1.0.0"
+    }
+
+# Keep your existing GZip middleware below the new code
 app.add_middleware(GZipMiddleware, minimum_size=1024)
 
 
 # ── Request timing middleware ─────────────────────────────────────────────────
 @app.middleware("http")
+# ... the rest of your timing code ...
 async def add_process_time_header(request: Request, call_next):
     start = time.perf_counter()
     response = await call_next(request)
