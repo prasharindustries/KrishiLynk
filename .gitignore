@@ -7,7 +7,6 @@ __pycache__/
 *.pth
 *.pt
 *.onnx
-models/
 
 # Environment variables
 .env
