@@ -132,8 +132,8 @@ from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
 
 from backend.models.model_loader import ModelRegistry
-from routes.predict import router as predict_router
-from routes.assistant import router as assistant_router
+from backend.routes.predict import router as predict_router
+from backend.routes.assistant import router as assistant_router
 
 # ── Logging ──────────────────────────────────────────────────────────────────
 logging.basicConfig(
