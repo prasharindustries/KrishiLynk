@@ -47,7 +47,7 @@ def build_resnet18() -> ArchitectureConfig:
         name="ResNet-18",
         model=model,
         grad_cam_layers=[model.layer4[-1]],
-        weight_key="resnet18_plant_disease.pth",
+        weight_key="resnet18_best.pth",
     )
 
 
@@ -59,7 +59,7 @@ def build_efficientnet_b0() -> ArchitectureConfig:
         name="EfficientNet-B0",
         model=model,
         grad_cam_layers=[model.features[-1]],
-        weight_key="efficientnet_b0_plant_disease.pth",
+        weight_key="efficientnet_best.pth",
     )
 
 
@@ -71,7 +71,7 @@ def build_densenet121() -> ArchitectureConfig:
         name="DenseNet-121",
         model=model,
         grad_cam_layers=[model.features[-1]],
-        weight_key="densenet121_plant_disease.pth",
+        weight_key="densenet121_best.pth",
     )
 
 

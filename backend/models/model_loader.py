@@ -1,13 +1,9 @@
-"""
-models/model_loader.py
-Thread-safe ModelRegistry — loads, caches, and serves all three CNN models.
-Supports optional saved weights from disk; falls back to ImageNet pretrained
-weights with a re-initialised head when no checkpoint is present.
-"""
-
 import logging
 import os
 import threading
+import requests
+import zipfile
+import io
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 
@@ -18,26 +14,21 @@ from models.architectures import (
     ALL_ARCHITECTURES,
     ArchitectureConfig,
     CLASS_NAMES,
-    NUM_CLASSES,
 )
 
 logger = logging.getLogger(__name__)
 
-# Weights directory — override via environment variable WEIGHTS_DIR
+# Weights directory — defaults to 'weights' folder
 WEIGHTS_DIR = Path(os.getenv("WEIGHTS_DIR", "weights"))
 
+# Your Hugging Face Zip Links
+WEIGHTS_MAP = {
+    "densenet121_best.pth": "https://huggingface.co/prasharindustries/krishilynk-weights/resolve/main/densenet121_best.pth.zip",
+    "efficientnet_best.pth": "https://huggingface.co/prasharindustries/krishilynk-weights/resolve/main/efficientnet_best.pth.zip",
+    "resnet18_best.pth": "https://huggingface.co/prasharindustries/krishilynk-weights/resolve/main/resnet18_best.pth.zip"
+}
 
 class ModelRegistry:
-    """
-    Singleton-style registry.
-
-    Usage
-    -----
-    registry = ModelRegistry()
-    registry.load_all()
-    model, config, device = registry.get("efficientnet_b0")
-    """
-
     _instance: Optional["ModelRegistry"] = None
     _lock = threading.Lock()
 
@@ -58,15 +49,30 @@ class ModelRegistry:
         self.loaded_models: Dict[str, Tuple[nn.Module, ArchitectureConfig]] = {}
         logger.info(f"ModelRegistry initialised on device: {self.device}")
 
-    # ── Public API ────────────────────────────────────────────────────────────
+    def _ensure_weights(self, filename: str):
+        """Downloads and extracts the zip if the .pth file is missing."""
+        target_path = WEIGHTS_DIR / filename
+        if not target_path.exists():
+            url = WEIGHTS_MAP.get(filename)
+            if not url:
+                return
+
+            logger.info(f"📥 Downloading and unzipping {filename}...")
+            WEIGHTS_DIR.mkdir(parents=True, exist_ok=True)
+            
+            response = requests.get(url)
+            response.raise_for_status()
+            
+            # Extract zip content directly into the weights folder
+            with zipfile.ZipFile(io.BytesIO(response.content)) as z:
+                z.extractall(WEIGHTS_DIR)
+            logger.info(f"✅ {filename} is ready.")
 
     def load_all(self):
-        """Load (or reload) every registered architecture."""
         for key in ALL_ARCHITECTURES:
             self._load(key)
 
     def get(self, key: str) -> Tuple[nn.Module, ArchitectureConfig]:
-        """Return a (model, config) tuple, loading on first access if needed."""
         if key not in self.loaded_models:
             self._load(key)
         return self.loaded_models[key]
@@ -74,36 +80,24 @@ class ModelRegistry:
     def get_all(self) -> Dict[str, Tuple[nn.Module, ArchitectureConfig]]:
         return dict(self.loaded_models)
 
-    @property
-    def class_names(self):
-        return CLASS_NAMES
-
-    # ── Private helpers ───────────────────────────────────────────────────────
-
     def _load(self, key: str):
-        if key not in ALL_ARCHITECTURES:
-            raise ValueError(f"Unknown model key: '{key}'. Valid: {list(ALL_ARCHITECTURES)}")
-
         builder = ALL_ARCHITECTURES[key]
         config: ArchitectureConfig = builder()
         model = config.model
+
+        # Ensure the .pth file exists (downloading if necessary)
+        self._ensure_weights(config.weight_key)
 
         weight_path = WEIGHTS_DIR / config.weight_key
         if weight_path.exists():
             logger.info(f"Loading weights from {weight_path}")
             state = torch.load(weight_path, map_location=self.device)
-            # handle both raw state_dict and {'model_state_dict': ...} checkpoints
             state_dict = state.get("model_state_dict", state)
             model.load_state_dict(state_dict, strict=False)
         else:
-            logger.warning(
-                f"No checkpoint found at {weight_path}. "
-                f"Using ImageNet-pretrained backbone with a random head. "
-                f"Place your weights at that path for correct predictions."
-            )
+            logger.warning(f"⚠️ Could not find {weight_path} even after download attempt.")
 
         model.to(self.device)
         model.eval()
-
         self.loaded_models[key] = (model, config)
-        logger.info(f"✓ {config.name} ready on {self.device}")
+        logger.info(f"✓ {config.name} ready.")

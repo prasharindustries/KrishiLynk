@@ -168,10 +168,14 @@ app = FastAPI(
 )
 
 
-# ── CORS Middleware (single, combined) ────────────────────────────────────────
+# Update with your actual Vercel deployment URL
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:3000", 
+        "http://localhost:5173",
+        "https://krishi-lynk.vercel.app/" # <--- Add your Vercel URL here
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

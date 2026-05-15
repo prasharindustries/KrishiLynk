@@ -1,0 +1,6 @@
+venv/
+weights/*.pth
+__pycache__/
+.git/
+.env
+*.log
