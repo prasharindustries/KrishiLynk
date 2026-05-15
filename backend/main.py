@@ -115,21 +115,23 @@
 Crop Disease XAI Detection API
 FastAPI entry point - production grade
 """
-import logging
-import time
-from contextlib import asynccontextmanager
-
 import sys
 import os
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+
+import logging
+import time
+from contextlib import asynccontextmanager
+
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
 
-from models.model_loader import ModelRegistry
+from backend.models.model_loader import ModelRegistry
 from routes.predict import router as predict_router
 from routes.assistant import router as assistant_router
 
