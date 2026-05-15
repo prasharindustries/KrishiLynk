@@ -314,12 +314,13 @@ client = OpenAI(
 )
 
 # Expanded list of diverse free models to avoid shared rate limits
+# backend/routes/assistant.py
+
+# Verified May 2026 Free Endpoints
 MODELS = [
-    "google/gemma-2-9b-it:free",
-    "mistralai/mistral-7b-instruct:free",
-    "microsoft/phi-3-mini-128k-instruct:free",
-    "qwen/qwen-2-7b-instruct:free",
-    "openchat/openchat-7b:free"
+    "meta-llama/llama-3.3-70b-instruct:free",
+    "google/gemma-3-27b:free",
+    "openrouter/free" 
 ]
 
 SYSTEM_PROMPT = """
