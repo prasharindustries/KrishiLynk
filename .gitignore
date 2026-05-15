@@ -11,18 +11,21 @@ models/
 
 # Environment variables
 .env
+.env.*
 .env.local
+backend/.env
+frontend/.env
 
 # Node
 node_modules/
 dist/
+frontend/dist/
+
+# Logs
+*.log
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Vite
-frontend/dist/
-
-# Logs
-*.log
+*.zip

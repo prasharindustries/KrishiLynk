@@ -1,4 +1,13 @@
+import KrishiSage from './components/KrishiSage'
+
 import { useState, useEffect } from 'react'
+
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from '@clerk/clerk-react'
 
 import {
   Leaf,
@@ -488,33 +497,58 @@ export default function App() {
           </div>
 
           {/* Right */}
-          <div className="flex items-center gap-4">
-            <StatusDot online={apiOnline} />
+          {/* Right */}
+<div className="flex items-center gap-4">
+  <StatusDot online={apiOnline} />
 
-            <a
-              href="https://arxiv.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="
-                hidden md:flex items-center gap-2
-                rounded-2xl
-                border border-white/[0.06]
-                bg-white/[0.03]
-                px-4 py-2.5
-                text-white/55
-                transition-all duration-300
-                hover:border-emerald-500/20
-                hover:bg-emerald-500/[0.04]
-                hover:text-emerald-300
-              "
-            >
-              <BookOpen size={15} />
+  <SignedOut>
+    <SignInButton mode="modal">
+      <button
+        className="
+          h-11 px-5 rounded-[18px]
+          border border-emerald-500/20
+          bg-emerald-500/10
+          backdrop-blur-xl
+          text-sm font-medium text-emerald-300
+          hover:bg-emerald-500/15
+          hover:border-emerald-500/30
+          transition-all duration-300
+        "
+      >
+        Sign In
+      </button>
+    </SignInButton>
+  </SignedOut>
 
-              <span className="text-sm font-medium">
-                Research Paper
-              </span>
-            </a>
-          </div>
+  <SignedIn>
+    <div className="flex items-center gap-3">
+      <div
+        className="
+          hidden sm:flex items-center gap-2
+          px-3 py-2 rounded-[16px]
+          border border-white/[0.06]
+          bg-white/[0.03]
+          text-white/55
+        "
+      >
+        <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+
+        <span className="font-mono text-[10px] tracking-[0.16em] uppercase">
+          Authenticated
+        </span>
+      </div>
+
+      <UserButton
+        appearance={{
+          elements: {
+            avatarBox:
+              'w-11 h-11 ring-2 ring-emerald-500/20',
+          },
+        }}
+      />
+    </div>
+  </SignedIn>
+</div>
         </div>
       </header>
 
@@ -725,61 +759,89 @@ export default function App() {
                   </div>
 
                   {/* CTA */}
-                  <div className="mt-8 flex flex-wrap gap-4">
-                    <button
-                      onClick={() => {
-                        document
-                          .querySelector(
-                            '#upload-zone'
-                          )
-                          ?.scrollIntoView({
-                            behavior: 'smooth',
-                          })
-                      }}
-                      className="
-                        inline-flex items-center gap-3
-                        rounded-2xl
-                        bg-gradient-to-r
-                        from-emerald-500
-                        to-green-400
-                        px-6 py-4
-                        font-semibold text-black
-                        shadow-[0_0_80px_rgba(34,197,94,0.18)]
-                        transition-all duration-300
-                        hover:scale-[1.02]
-                      "
-                    >
-                      Begin Neural Analysis
+                  {/* CTA */}
+<div className="mt-8 flex flex-wrap gap-4">
+  <SignedOut>
+    <SignInButton mode="modal">
+      <button
+        className="
+          inline-flex items-center gap-3
+          rounded-2xl
+          bg-gradient-to-r
+          from-emerald-500
+          to-green-400
+          px-6 py-4
+          font-semibold text-black
+          shadow-[0_0_80px_rgba(34,197,94,0.18)]
+          transition-all duration-300
+          hover:scale-[1.02]
+        "
+      >
+        Access Neural Platform
 
-                      <ArrowRight size={18} />
-                    </button>
+        <ArrowRight size={18} />
+      </button>
+    </SignInButton>
+  </SignedOut>
 
-                    <div
-                      className="
-                        flex items-center gap-3
-                        rounded-2xl
-                        border border-white/[0.06]
-                        bg-white/[0.03]
-                        px-5 py-4
-                        backdrop-blur-xl
-                      "
-                    >
-                      <Database
-                        size={18}
-                        className="text-cyan-300"
-                      />
+  <SignedIn>
+    <button
+      onClick={() => {
+        const uploadZone =
+          document.getElementById('upload-zone')
 
-                      <div>
-                        <p className="font-medium text-white">
-                          Multi-Model Pipeline
-                        </p>
+        if (uploadZone) {
+          uploadZone.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          })
+        }
+      }}
+      className="
+        inline-flex items-center gap-3
+        rounded-2xl
+        bg-gradient-to-r
+        from-emerald-500
+        to-green-400
+        px-6 py-4
+        font-semibold text-black
+        shadow-[0_0_80px_rgba(34,197,94,0.18)]
+        transition-all duration-300
+        hover:scale-[1.02]
+      "
+    >
+      Begin Neural Analysis
 
-                        <p className="text-[11px] text-white/52">
-                          ResNet · EfficientNet · DenseNet
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+      <ArrowRight size={18} />
+    </button>
+  </SignedIn>
+
+  <div
+    className="
+      flex items-center gap-3
+      rounded-2xl
+      border border-white/[0.06]
+      bg-white/[0.03]
+      px-5 py-4
+      backdrop-blur-xl
+    "
+  >
+    <Database
+      size={18}
+      className="text-cyan-300"
+    />
+
+    <div>
+      <p className="font-medium text-white">
+        Multi-Model Pipeline
+      </p>
+
+      <p className="text-[11px] text-white/52">
+        ResNet · EfficientNet · DenseNet
+      </p>
+    </div>
+  </div>
+</div>
 
                   {/* Stats */}
                   <div className="mt-9 grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -808,135 +870,242 @@ export default function App() {
               </section>
 
               {/* ================================================= */}
-              {/* IMAGE UPLOAD */}
-              {/* ================================================= */}
+{/* PROTECTED PLATFORM */}
+{/* ================================================= */}
 
-              <div
-                id="upload-zone"
-                className="animate-fade-up"
-                style={{
-                  animationDelay: '100ms',
-                }}
-              >
-                <ImageUpload
-                  onImageSelected={setImageFile}
-                  disabled={isProcessing}
-                />
-              </div>
+<SignedIn>
+  {/* ================================================= */}
+  {/* IMAGE UPLOAD */}
+  {/* ================================================= */}
 
-              {/* ================================================= */}
-              {/* PROGRESS */}
-              {/* ================================================= */}
+  <div
+    id="upload-zone"
+    className="animate-fade-up"
+    style={{
+      animationDelay: '100ms',
+    }}
+  >
+    <ImageUpload
+      onImageSelected={setImageFile}
+      disabled={isProcessing}
+    />
+  </div>
 
-              {isProcessing && (
-                <ProgressIndicator
-                  progress={progress}
-                  stage={stage}
-                />
-              )}
+  {/* ================================================= */}
+  {/* PROGRESS */}
+  {/* ================================================= */}
 
-              {/* ================================================= */}
-              {/* ERROR */}
-              {/* ================================================= */}
+  {isProcessing && (
+    <ProgressIndicator
+      progress={progress}
+      stage={stage}
+    />
+  )}
 
-              {status === 'error' && (
-                <div
-                  className="
-                    relative overflow-hidden
-                    rounded-[28px]
-                    border border-red-500/20
-                    bg-red-950/20
-                    backdrop-blur-2xl
-                    p-6
-                    animate-fade-up
-                  "
-                >
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(239,68,68,0.12),transparent_70%)]" />
+  {/* ================================================= */}
+  {/* ERROR */}
+  {/* ================================================= */}
 
-                  <div className="relative z-10 flex gap-4">
-                    <div
-                      className="
-                        w-12 h-12 rounded-2xl
-                        border border-red-500/20
-                        bg-red-500/10
-                        flex items-center justify-center
-                        shrink-0
-                      "
-                    >
-                      <AlertCircle
-                        size={20}
-                        className="text-red-400"
-                      />
-                    </div>
+  {status === 'error' && (
+    <div
+      className="
+        relative overflow-hidden
+        rounded-[28px]
+        border border-red-500/20
+        bg-red-950/20
+        backdrop-blur-2xl
+        p-6
+        animate-fade-up
+      "
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(239,68,68,0.12),transparent_70%)]" />
 
-                    <div className="flex-1">
-                      <p className="font-display text-xl font-bold text-red-200">
-                        Neural Analysis Failed
-                      </p>
+      <div className="relative z-10 flex gap-4">
+        <div
+          className="
+            w-12 h-12 rounded-2xl
+            border border-red-500/20
+            bg-red-500/10
+            flex items-center justify-center
+            shrink-0
+          "
+        >
+          <AlertCircle
+            size={20}
+            className="text-red-400"
+          />
+        </div>
 
-                      <p className="mt-2 text-sm leading-relaxed text-red-100/60">
-                        {error}
-                      </p>
+        <div className="flex-1">
+          <p className="font-sans text-xl font-bold tracking-[-0.03em] text-red-200">
+            Neural Analysis Failed
+          </p>
 
-                      <button
-                        onClick={reset}
-                        className="
-                          mt-4 inline-flex items-center gap-2
-                          rounded-xl
-                          border border-red-500/20
-                          bg-red-500/10
-                          px-4 py-2
-                          text-sm font-medium text-red-300
-                          transition-all duration-300
-                          hover:bg-red-500/15
-                        "
-                      >
-                        Retry Analysis
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
+          <p className="mt-2 text-sm leading-relaxed text-red-100/60">
+            {error}
+          </p>
 
-              {/* ================================================= */}
-              {/* ANALYSE BUTTON */}
-              {/* ================================================= */}
+          <button
+            onClick={reset}
+            className="
+              mt-4 inline-flex items-center gap-2
+              rounded-xl
+              border border-red-500/20
+              bg-red-500/10
+              px-4 py-2
+              text-sm font-medium text-red-300
+              transition-all duration-300
+              hover:bg-red-500/15
+            "
+          >
+            Retry Analysis
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
 
-              {!isProcessing && (
-                <button
-                  onClick={() =>
-                    predict(imageFile, selectedModels)
-                  }
-                  disabled={!canAnalyse}
-                  className="
-                    group relative overflow-hidden
-                    w-full rounded-[28px]
-                    border border-emerald-500/20
-                    bg-gradient-to-r
-                    from-emerald-500
-                    via-green-400
-                    to-cyan-400
-                    py-4
-                    text-[15px] font-semibold tracking-[-0.01em] text-black
-                    shadow-[0_10px_60px_rgba(34,197,94,0.12)]
-                    transition-all duration-500
-                    hover:-translate-y-[2px]
-                    disabled:cursor-not-allowed
-                    disabled:opacity-40
-                  "
-                >
-                  <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent)] translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+  {/* ================================================= */}
+  {/* ANALYSE BUTTON */}
+  {/* ================================================= */}
 
-                  <span className="relative z-10 inline-flex items-center gap-3">
-                    {imageFile
-                      ? 'Begin Neural Analysis'
-                      : 'Upload a Crop Image to Begin'}
+  {!isProcessing && (
+    <button
+      onClick={() =>
+        predict(imageFile, selectedModels)
+      }
+      disabled={!canAnalyse}
+      className="
+        group relative overflow-hidden
+        w-full rounded-[28px]
+        border border-emerald-500/20
+        bg-gradient-to-r
+        from-emerald-500
+        via-green-400
+        to-cyan-400
+        py-4
+        text-[15px] font-semibold tracking-[-0.01em] text-black
+        shadow-[0_10px_60px_rgba(34,197,94,0.12)]
+        transition-all duration-500
+        hover:-translate-y-[2px]
+        disabled:cursor-not-allowed
+        disabled:opacity-40
+      "
+    >
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent)] translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
 
-                    <ArrowRight size={18} />
-                  </span>
-                </button>
-              )}
-            </div>
+      <span className="relative z-10 inline-flex items-center gap-3">
+        {imageFile
+          ? 'Begin Neural Analysis'
+          : 'Upload a Crop Image to Begin'}
+
+        <ArrowRight size={18} />
+      </span>
+    </button>
+  )}
+</SignedIn>
+
+{/* ================================================= */}
+{/* SIGNED OUT CTA */}
+{/* ================================================= */}
+
+{/* ================================================= */}
+{/* SIGNED OUT CTA */}
+{/* ================================================= */}
+
+<SignedOut>
+  <div
+    className="
+      relative overflow-hidden
+      rounded-[28px]
+      border border-emerald-500/20
+      bg-gradient-to-b
+      from-emerald-500/[0.08]
+      to-black/30
+      backdrop-blur-2xl
+      p-8 sm:p-10
+      text-center
+      animate-fade-up
+    "
+  >
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.16),transparent_70%)]" />
+
+    <div className="relative z-10">
+      <div
+        className="
+          mx-auto mb-6
+          w-20 h-20 rounded-[28px]
+          border border-emerald-500/20
+          bg-emerald-500/10
+          flex items-center justify-center
+        "
+      >
+        <ShieldCheck
+          size={34}
+          className="text-emerald-300"
+        />
+      </div>
+
+      <h3
+        className="
+          font-sans
+          text-[2rem]
+          sm:text-[2.6rem]
+          font-black
+          tracking-[-0.04em]
+          text-white
+        "
+      >
+        Access the Neural Platform
+      </h3>
+
+      <p
+        className="
+          mt-4
+          max-w-2xl mx-auto
+          text-[15px]
+          leading-[1.9]
+          text-white/60
+        "
+      >
+        Sign in to unlock crop disease analysis,
+        explainability intelligence, neural
+        attribution systems, and multi-model
+        AI diagnostics.
+      </p>
+
+      <div className="mt-8 flex justify-center">
+        <SignInButton mode="modal">
+          <button
+            className="
+              inline-flex items-center gap-3
+              rounded-2xl
+              bg-gradient-to-r
+              from-emerald-500
+              via-green-400
+              to-cyan-400
+              px-7 py-4
+              text-[15px]
+              font-semibold
+              text-black
+              shadow-[0_0_80px_rgba(34,197,94,0.18)]
+              transition-all duration-300
+              hover:scale-[1.03]
+            "
+          >
+            Access KrishiLynk Platform
+
+            <ArrowRight size={18} />
+          </button>
+        </SignInButton>
+      </div>
+    </div>
+  </div>
+</SignedOut>
+
+{/* ================================================= */}
+
+</div>
 
             {/* ================================================= */}
             {/* RIGHT */}
@@ -971,57 +1140,503 @@ export default function App() {
               </div>
 
               {/* Pipeline */}
-              <PipelineCard />
-            </div>
+              {/* Pipeline */}
+<PipelineCard />
+
+{/* ================================================= */}
+{/* GLOBAL OUTBREAK RADAR */}
+{/* ================================================= */}
+
+<div
+  className="
+    relative overflow-hidden
+    rounded-[30px]
+    border border-white/[0.06]
+    bg-gradient-to-b
+    from-white/[0.03]
+    to-black/30
+    backdrop-blur-2xl
+    p-5
+  "
+>
+  {/* Ambient */}
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.10),transparent_45%)]" />
+
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.10),transparent_45%)]" />
+
+  <div className="relative z-10">
+    {/* Header */}
+    <div className="flex items-start justify-between gap-4">
+      <div>
+        <div
+          className="
+            inline-flex items-center gap-2
+            rounded-full
+            border border-red-500/20
+            bg-red-500/[0.08]
+            px-3 py-1.5
+          "
+        >
+          <div className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
+
+          <span
+            className="
+              font-mono
+              text-[9px]
+              uppercase
+              tracking-[0.22em]
+              text-red-300/80
+            "
+          >
+            Global Disease Surveillance
+          </span>
+        </div>
+
+        <h3
+          className="
+            mt-4
+            font-sans
+            text-[1.7rem]
+            font-black
+            tracking-[-0.04em]
+            text-white
+          "
+        >
+          Global Outbreak Radar
+        </h3>
+
+        <p className="mt-2 text-sm leading-relaxed text-white/55">
+          Real-time agricultural pathogen monitoring
+          across high-risk crop ecosystems and
+          climate-sensitive disease zones.
+        </p>
+      </div>
+
+      <div
+        className="
+          rounded-2xl
+          border border-emerald-500/20
+          bg-emerald-500/[0.08]
+          px-3 py-2
+        "
+      >
+        <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-emerald-300">
+          Live Intelligence
+        </p>
+      </div>
+    </div>
+
+    {/* Radar */}
+    <div
+      className="
+        relative
+        mt-8
+        h-[320px]
+        overflow-hidden
+        rounded-[28px]
+        border border-white/[0.06]
+        bg-black/30
+      "
+    >
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="relative w-[260px] h-[260px]">
+          <div className="absolute inset-0 rounded-full border border-emerald-500/10" />
+          <div className="absolute inset-[18%] rounded-full border border-emerald-500/10" />
+          <div className="absolute inset-[36%] rounded-full border border-emerald-500/10" />
+
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-emerald-500/10 -translate-x-1/2" />
+
+          <div className="absolute top-1/2 left-0 right-0 h-px bg-emerald-500/10 -translate-y-1/2" />
+
+          <div
+            className="
+              absolute inset-0 rounded-full
+              bg-[conic-gradient(from_0deg,rgba(16,185,129,0.22),transparent,transparent)]
+              animate-[spin_6s_linear_infinite]
+            "
+          />
+
+          <div className="absolute inset-[32%] rounded-full bg-emerald-400/20 blur-2xl" />
+
+          <div className="absolute top-[20%] left-[62%] w-3 h-3 rounded-full bg-red-400 shadow-[0_0_20px_rgba(248,113,113,0.9)] animate-pulse" />
+
+          <div className="absolute top-[62%] left-[28%] w-2.5 h-2.5 rounded-full bg-yellow-300 shadow-[0_0_20px_rgba(253,224,71,0.9)] animate-pulse" />
+
+          <div className="absolute top-[40%] left-[74%] w-2 h-2 rounded-full bg-cyan-300 shadow-[0_0_18px_rgba(103,232,249,0.9)] animate-pulse" />
+
+          <div className="absolute top-[72%] left-[68%] w-2.5 h-2.5 rounded-full bg-orange-300 shadow-[0_0_18px_rgba(253,186,116,0.9)] animate-pulse" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
           </div>
         )}
       </main>
 
       {/* ================================================= */}
-      {/* FOOTER */}
-      {/* ================================================= */}
+     {/* ================================================= */}
+{/* GLOBAL AGRICULTURAL IMPACT */}
+{/* ================================================= */}
 
-      <footer className="relative z-10 mt-14 border-t border-white/[0.06]">
-        <div className="max-w-[1450px] mx-auto px-4 sm:px-6 py-8">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-            {/* Left */}
-            <div>
-              <div className="flex items-center gap-3">
-                <Leaf
-                  size={18}
-                  className="text-emerald-400"
-                />
+<section
+  className="
+    relative z-10
+    mt-16
+    overflow-hidden
+    rounded-[34px]
+    border border-white/[0.06]
+    bg-gradient-to-b
+    from-white/[0.02]
+    to-black/30
+    backdrop-blur-2xl
+    p-6 sm:p-8 lg:p-10
+  "
+>
+  {/* Ambient */}
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.10),transparent_45%)]" />
 
-                <span className="font-sans text-[1.3rem] font-bold tracking-[-0.03em] text-white">
-                  KrishiLynk
-                </span>
-              </div>
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.10),transparent_45%)]" />
 
-              <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/52">
-                Explainable AI platform for
-                research-grade crop disease
-                diagnostics and neural attribution
-                intelligence.
+  <div className="relative z-10">
+    {/* Top */}
+    <div className="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-8">
+      <div className="max-w-3xl">
+        <div
+          className="
+            inline-flex items-center gap-2
+            rounded-full
+            border border-emerald-500/20
+            bg-emerald-500/[0.08]
+            px-4 py-2
+          "
+        >
+          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+
+          <span
+            className="
+              font-mono
+              text-[10px]
+              uppercase
+              tracking-[0.24em]
+              text-emerald-300/80
+            "
+          >
+            Global Agricultural Impact Intelligence
+          </span>
+        </div>
+
+        <h2
+          className="
+            mt-6
+            font-sans
+            text-[2.3rem]
+            sm:text-[3.2rem]
+            lg:text-[4rem]
+            font-black
+            leading-[0.95]
+            tracking-[-0.05em]
+            text-white
+          "
+        >
+          Plant Diseases Cause
+          <span className="block bg-gradient-to-r from-emerald-300 via-cyan-300 to-blue-400 bg-clip-text text-transparent">
+            $220B+ Annual
+          </span>
+          Global Crop Losses
+        </h2>
+
+        <p
+          className="
+            mt-6
+            max-w-2xl
+            text-[15px]
+            leading-[1.9]
+            text-white/60
+          "
+        >
+          Crop diseases and agricultural pathogens
+          reduce global food production at massive
+          scale, impacting national GDP, farmer
+          income, food security, and agricultural
+          sustainability across developing and
+          industrial economies.
+        </p>
+      </div>
+
+      {/* Research CTA */}
+      <div
+        className="
+          flex flex-col items-start xl:items-end
+          gap-4
+        "
+      >
+        <div
+          className="
+            rounded-2xl
+            border border-white/[0.06]
+            bg-white/[0.03]
+            px-5 py-4
+            backdrop-blur-xl
+          "
+        >
+          <p className="font-mono text-[10px] tracking-[0.24em] uppercase text-white/40">
+            Research Sources
+          </p>
+
+          <p className="mt-2 text-sm leading-relaxed text-white/68">
+            FAO · World Bank · Nature · CABI · ICAR
+          </p>
+        </div>
+
+        <a
+          href="https://your-ieee-paper-link.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="
+            group relative overflow-hidden
+            inline-flex items-center gap-3
+            rounded-2xl
+            bg-gradient-to-r
+            from-emerald-500
+            via-green-400
+            to-cyan-400
+            px-6 py-4
+            font-semibold text-black
+            shadow-[0_0_80px_rgba(34,197,94,0.18)]
+            transition-all duration-300
+            hover:scale-[1.02]
+          "
+        >
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent)] translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+
+          <span className="relative z-10 flex items-center gap-3">
+            View Our Research Paper
+
+            <ArrowRight size={18} />
+          </span>
+        </a>
+      </div>
+    </div>
+
+    {/* Stats Grid */}
+    <div className="mt-12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+      {[
+        {
+          country: 'India',
+          usd: '$15.2B',
+          inr: '₹1.26 Lakh Cr',
+          loss: '18–25% crop loss',
+          highlight: true,
+        },
+        {
+          country: 'China',
+          usd: '$20.1B',
+          inr: '₹1.67 Lakh Cr',
+          loss: 'Rice & wheat pathogen impact',
+        },
+        {
+          country: 'United States',
+          usd: '$12.4B',
+          inr: '₹1.03 Lakh Cr',
+          loss: 'Corn & soybean disease losses',
+        },
+        {
+          country: 'Brazil',
+          usd: '$9.3B',
+          inr: '₹77K Cr',
+          loss: 'Coffee & soybean outbreaks',
+        },
+      ].map((item, idx) => (
+        <div
+          key={idx}
+          className={[
+            `
+              relative overflow-hidden
+              rounded-[26px]
+              border
+              backdrop-blur-2xl
+              p-5
+              transition-all duration-500
+              hover:-translate-y-[4px]
+            `,
+            item.highlight
+              ? 'border-emerald-500/30 bg-emerald-500/[0.08]'
+              : 'border-white/[0.06] bg-white/[0.03]',
+          ].join(' ')}
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.10),transparent_70%)]" />
+
+          <div className="relative z-10">
+            <div className="flex items-center justify-between">
+              <p className="font-sans text-[1.1rem] font-bold text-white">
+                {item.country}
+              </p>
+
+              {item.highlight && (
+                <div
+                  className="
+                    rounded-full
+                    border border-emerald-500/20
+                    bg-emerald-500/10
+                    px-3 py-1
+                  "
+                >
+                  <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-emerald-300">
+                    Highest Priority
+                  </span>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-6">
+              <p
+                className="
+                  font-sans
+                  text-[2rem]
+                  font-black
+                  tracking-[-0.04em]
+                  text-white
+                "
+              >
+                {item.usd}
+              </p>
+
+              <p className="mt-1 text-sm text-emerald-300">
+                {item.inr}
               </p>
             </div>
 
-            {/* Right */}
-            <div className="flex flex-col items-start lg:items-end gap-3">
-              <p className="font-mono text-[9px] tracking-[0.22em] uppercase text-white/45">
-                ResNet-18 · EfficientNet-B0 · DenseNet-121
-              </p>
+            <div className="mt-6 h-px bg-white/[0.06]" />
 
-              <p className="font-mono text-[9px] tracking-[0.22em] uppercase text-white/45">
-                Grad-CAM · LIME · Integrated Gradients · AOPC
-              </p>
-
-              <p className="font-mono text-[9px] tracking-[0.22em] uppercase text-emerald-300/45">
-                Neural Explainability Infrastructure
-              </p>
-            </div>
+            <p className="mt-5 text-sm leading-relaxed text-white/55">
+              {item.loss}
+            </p>
           </div>
         </div>
+      ))}
+    </div>
+
+    {/* Bottom Insight */}
+    <div
+      className="
+        mt-10
+        rounded-[28px]
+        border border-cyan-500/10
+        bg-gradient-to-r
+        from-cyan-500/[0.06]
+        to-emerald-500/[0.06]
+        p-6
+      "
+    >
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-cyan-300/70">
+            Explainable AI Opportunity
+          </p>
+
+          <h3 className="mt-3 font-sans text-[1.7rem] font-black tracking-[-0.04em] text-white">
+            Earlier Disease Detection Could Save
+            Billions in Agricultural GDP
+          </h3>
+
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/60">
+            Explainable AI systems like KrishiLynk
+            enable transparent agricultural
+            diagnostics, helping researchers,
+            institutions, and farmers identify crop
+            infections earlier and reduce large-scale
+            economic losses.
+          </p>
+        </div>
+
+        <div
+          className="
+            rounded-2xl
+            border border-white/[0.06]
+            bg-black/20
+            px-6 py-5
+            min-w-[240px]
+          "
+        >
+          <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-white/40">
+            Estimated Global Savings Potential
+          </p>
+
+          <p
+            className="
+              mt-3
+              font-sans
+              text-[2.4rem]
+              font-black
+              tracking-[-0.05em]
+              bg-gradient-to-r
+              from-emerald-300
+              to-cyan-300
+              bg-clip-text
+              text-transparent
+            "
+          >
+            $85B+
+          </p>
+
+          <p className="mt-2 text-sm text-white/55">
+            through earlier AI-assisted intervention
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{/* ================================================= */}
+{/* FOOTER */}
+{/* ================================================= */}
+
+<footer className="relative z-10 mt-14 border-t border-white/[0.06]">
+  <div className="max-w-[1450px] mx-auto px-4 sm:px-6 py-8">
+    <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+      {/* Left */}
+      <div>
+        <div className="flex items-center gap-3">
+          <Leaf
+            size={18}
+            className="text-emerald-400"
+          />
+
+          <span className="font-sans text-[1.3rem] font-bold tracking-[-0.03em] text-white">
+            KrishiLynk
+          </span>
+        </div>
+
+        <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/52">
+          Explainable AI platform for
+          research-grade crop disease
+          diagnostics and neural attribution
+          intelligence.
+        </p>
+      </div>
+
+      {/* Right */}
+      <div className="flex flex-col items-start lg:items-end gap-3">
+        <p className="font-mono text-[9px] tracking-[0.22em] uppercase text-white/45">
+          ResNet-18 · EfficientNet-B0 · DenseNet-121
+        </p>
+
+        <p className="font-mono text-[9px] tracking-[0.22em] uppercase text-white/45">
+          Grad-CAM · LIME · Integrated Gradients · AOPC
+        </p>
+
+        <p className="font-mono text-[9px] tracking-[0.22em] uppercase text-emerald-300/45">
+          Neural Explainability Infrastructure
+        </p>
+      </div>
+    </div>
+  </div>
       </footer>
+
+      <KrishiSage />
     </div>
   )
 }
