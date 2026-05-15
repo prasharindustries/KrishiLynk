@@ -1392,7 +1392,7 @@ export default function App() {
         </div>
 
         <a
-          href="https://your-ieee-paper-link.com"
+          href="https://drive.google.com/file/d/1GlDDXMwe6kWAOaKGlLWL04Iil0JXHugg/view?usp=sharing"
           target="_blank"
           rel="noopener noreferrer"
           className="
